@@ -99,7 +99,7 @@ func main() {
 
 	table := Dbtabels{}
 	for rows.Next() {
-		err := rows.Scan(&table.Name)
+		err = rows.Scan(&table.Name)
 		fmt.Println("generate table gorm struct：", table.Name)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v", err)
@@ -130,7 +130,7 @@ func main() {
 		struct_str := fmt.Sprintf("type %s struct { \n", structName)
 		column := Column{}
 		for cloumns.Next() {
-			err := cloumns.Scan(&column.ColumnName, &column.DataType, &column.ColumnComment, &column.Columnkey,
+			err = cloumns.Scan(&column.ColumnName, &column.DataType, &column.ColumnComment, &column.Columnkey,
 				&column.Extra, &column.ColumnDefault, &column.ColumnType)
 			// 类型判断
 			// 开始拼接字符串
@@ -176,9 +176,10 @@ func main() {
 				primaryKey = ";primary_key"
 			}
 			// 如果默认值为空，也生成默认值
-			if !column.ColumnDefault.Valid {
-				struct_str += fmt.Sprintf("`gorm:\"column:%s;default:%v%s\"` \n", column.ColumnName, "NULL", primaryKey)
-			} else if column.ColumnDefault.String != "" {
+			// if !column.ColumnDefault.Valid {
+			// 	struct_str += fmt.Sprintf("`gorm:\"column:%s;default:%v%s\"` \n", column.ColumnName, "NULL", primaryKey)
+			// } else
+			if column.ColumnDefault.String != "" {
 				struct_str += fmt.Sprintf("`gorm:\"column:%s;default:%v%s\"` \n", column.ColumnName,
 					column.ColumnDefault.String, primaryKey)
 			} else {
